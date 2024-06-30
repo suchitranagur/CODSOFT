@@ -1,0 +1,66 @@
+import java.util.InputMismatchException;
+import java.util.Scanner;
+class GradeCalculator {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        int numSubjects = getValidInt(scanner, "Enter the number of subjects: ", 1, Integer.MAX_VALUE);
+
+        int totalMarksObtained = 0;
+        int totalPossibleMarks = 0;
+
+        for (int i = 1; i <= numSubjects; i++) {
+            int marksObtained = getValidInt(scanner, "Enter marks obtained in subject " + i + ": ", 0, 100);
+            int possibleMarks = getValidInt(scanner, "Enter total possible marks for subject " + i + ": ", marksObtained, Integer.MAX_VALUE);
+
+            totalMarksObtained += marksObtained;
+            totalPossibleMarks += possibleMarks;
+        }
+
+        double averagePercentage = (double) totalMarksObtained / totalPossibleMarks * 100;
+
+        char grade;
+        String remarks;
+        if (averagePercentage >= 90) {
+            grade = 'A';
+            remarks = "Excellent";
+        } else if (averagePercentage >= 80) {
+            grade = 'B';
+            remarks = "Good";
+        } else if (averagePercentage >= 70) {
+            grade = 'C';
+            remarks = "Average";
+        } else if (averagePercentage >= 60) {
+            grade = 'D';
+            remarks = "Below Average";
+        } else {
+            grade = 'F';
+            remarks = "Fail";
+        }
+
+        System.out.println("----------------------------");
+        System.out.println("Total Marks Obtained: " + totalMarksObtained);
+        System.out.println("Total Possible Marks: " + totalPossibleMarks);
+        System.out.println("Average Percentage: " + averagePercentage + "%");
+        System.out.println("Grade: " + grade + " (" + remarks + ")");
+
+        scanner.close();
+    }
+
+    private static int getValidInt(Scanner scanner, String prompt, int min, int max) {
+        while (true) {
+            System.out.print(prompt);
+            try {
+                int value = scanner.nextInt();
+                if (value >= min && value <= max) {
+                    return value;
+                } else {
+                    System.out.println("Please enter a value between " + min + " and " + max + ".");
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid input. Please enter an integer.");
+                scanner.next(); // clear the invalid input
+            }
+        }
+    }
+}
