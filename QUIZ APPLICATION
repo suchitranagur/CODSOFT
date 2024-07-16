@@ -1,0 +1,93 @@
+import java.util.*;
+
+public class QuizApp {
+    private static final Scanner scanner = new Scanner(System.in);
+    private static final List<Question> questions = new ArrayList<>();
+    private static int score = 0;
+
+    public static void main(String[] args) {
+        initializeQuestions();
+        runQuiz();
+        displayResults();
+    }
+
+    private static void initializeQuestions() {
+        questions.add(new Question("What is the capital of France?", 
+                                   Arrays.asList("1. Berlin", "2. Madrid", "3. Paris", "4. Rome"), 3));
+        questions.add(new Question("What is the largest planet in our solar system?", 
+                                   Arrays.asList("1. Earth", "2. Jupiter", "3. Mars", "4. Venus"), 2));
+        questions.add(new Question("What is the square root of 64?", 
+                                   Arrays.asList("1. 6", "2. 7", "3. 8", "4. 9"), 3));
+        questions.add(new Question("What is the chemical symbol for water?", 
+                                   Arrays.asList("1. O2", "2. H2O", "3. CO2", "4. NaCl"), 2));
+        questions.add(new Question("What year did the Titanic sink?", 
+                                   Arrays.asList("1. 1912", "2. 1905", "3. 1920", "4. 1898"), 1));
+    }
+
+    private static void runQuiz() {
+        for (Question question : questions) {
+            displayQuestion(question);
+            int answer = getUserAnswer();
+            if (answer == question.getCorrectAnswer()) {
+                score++;
+            }
+        }
+    }
+
+    private static void displayQuestion(Question question) {
+        System.out.println(question.getQuestion());
+        for (String option : question.getOptions()) {
+            System.out.println(option);
+        }
+        System.out.println("You have 10 seconds to answer...");
+    }
+
+    private static int getUserAnswer() {
+        Timer timer = new Timer();
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                System.out.println("Time's up!");
+                System.exit(0);
+            }
+        };
+        timer.schedule(task, 10000);
+        int answer = scanner.nextInt();
+        timer.cancel();
+        return answer;
+    }
+
+    private static void displayResults() {
+        System.out.println("Quiz Over!");
+        System.out.println("Your score: " + score + "/" + questions.size());
+        for (int i = 0; i < questions.size(); i++) {
+            Question question = questions.get(i);
+            System.out.println("Q" + (i + 1) + ": " + question.getQuestion());
+            System.out.println("Correct Answer: " + question.getOptions().get(question.getCorrectAnswer() - 1));
+        }
+    }
+
+    static class Question {
+        private final String question;
+        private final List<String> options;
+        private final int correctAnswer;
+
+        public Question(String question, List<String> options, int correctAnswer) {
+            this.question = question;
+            this.options = options;
+            this.correctAnswer = correctAnswer;
+        }
+
+        public String getQuestion() {
+            return question;
+        }
+
+        public List<String> getOptions() {
+            return options;
+        }
+
+        public int getCorrectAnswer() {
+            return correctAnswer;
+        }
+    }
+}
